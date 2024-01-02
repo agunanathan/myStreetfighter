@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+<title>
+    punchy man 
+</title>
+<style>
+  .settings {
+  width: 50%;
+  float: left;
+  border: 0px solid black;
+  }
+  .scoreboard {
+  width: 49%;
+  float: right;
+  border: 1px solid black;
+  }
+  .action {
+  width: 100%;
+  float: left;
+  border: 1px solid black;
+  }
+  .healthindicator {
+  width: 100%;
+  float: left;
+  color: green;
+  border: 0px solid black;
+  }
+  .punchremainder {
+  width: 100%;
+  float: left;
+  color: blue;
+  border: 0px solid black;
+  }
+  .punchpower {
+  width: 100%;
+  float: left;
+  color: red;
+  border: 0px solid black;
+  }
+  button {
+    width: 200px;
+    height: 50px;;
+  }
+ </style>
+</head>
+
+<body>
+<script>
+// Variables:
+var difficultyLevel = 2;
+var bagHealth = 15;
+var punchPower = 0;
+var punchCount = 5;
+var punchPowerVariable = 5;
+var superPunchVariable = 15;
+var superOnePunchVariable = 30;
+var indicatorString = "&#9639";
+var character="ryu"; //default
+var punch1_audio=new Audio("1.mp3");
+var punch2_audio=new Audio("2.mp3");
+var punch3_audio=new Audio("3.mp3");
+var punch4_audio=new Audio("4.mp3");
+var punch5_audio=new Audio("5.mp3");
+var punch6_audio=new Audio("6.mp3");
+var punch7_audio=new Audio("7.mp3");
+var youLoseAudio= new Audio("youlose.mp3");
+var youWinAudio=new Audio("youwin.mp3");
+var punchSoundVariable=1;
+var punchSoundInt=1;
+var echechche=new Audio("echechche.mp3");
+var rajinilaugh=new Audio("rk_laugh.mp3");
+
+
+// Functions:
+function createPunchPowerString(){
+  indicatorString=""
+  for (let i = 0; i < punchPower; i++) {
+  indicatorString = indicatorString + "&#9639";
+  }
+  document.getElementById("punchPowerIndicator").innerHTML="Punch Power: " +indicatorString;
+}
+
+function createHealthString(){
+  indicatorString=""
+  for (let i = 0; i < bagHealth; i++) {
+  indicatorString = indicatorString + "&#9639";
+  }
+  document.getElementById("healthStringDisplay").innerHTML="Bag Health: " +indicatorString;
+}
+function createPunchCountString(){
+  indicatorString=""
+  for (let i = 0; i < punchCount; i++) {
+  indicatorString = indicatorString + "&#9639";
+  }
+  document.getElementById("punchStringDisplay").innerHTML="Punches Remaining: " +indicatorString;
+}
+
+function setGameSetting(){
+    document.getElementById("punchButton").disabled=false;
+    document.getElementById("superPunchButton").disabled=false;
+    document.getElementById("superOnePunchButton").disabled=false;
+    setGameLevel ();
+    document.getElementById("difficultyLevelDisplay").innerHTML = "Difficulty Level: " + difficultyLevel;
+    document.getElementById("bagHealthDisplay").innerHTML =  "Bag health: " + bagHealth;
+    document.getElementById("gameStatus").innerHTML =  "Game Status: Good Luck Punchy!!";
+    document.getElementById("punchCountDisplay").innerHTML =  "Punch Count: " + punchCount + " punches remaining";
+    document.getElementById("punchPowerDisplay").innerHTML =  "Punch Power: ";
+    createHealthString();
+    createPunchCountString();
+    createPunchPowerString()
+
+}
+
+
+function setGameLevel(){
+  punchCount=5;
+  difficultyLevel = prompt("Enter a number: 1 (easy), 2(normal) or 3(Hard)", difficultyLevel);
+  if (difficultyLevel==1 || difficultyLevel==2 || difficultyLevel==3){
+      if (difficultyLevel==1){bagHealth=10}
+      if (difficultyLevel==2){bagHealth=15}
+      if (difficultyLevel==3){bagHealth=20}
+  }
+  else {
+    alert("You didn't use 1, 2 or 3.  Using Normal difficulty");
+    difficultyLevel=2;
+    bagHealth=15;
+  }
+}
+
+function punchAction(){
+document.getElementById("superOnePunchButton").disabled=true;
+punchCount=punchCount-1;
+punchPower = Math.floor(Math.random() * punchPowerVariable) + 1
+displayPunchImage();
+bagHealth=bagHealth-punchPower;  
+punchResult();
+if (punchCount<=1){document.getElementById("superPunchButton").disabled=true;}
+createHealthString();
+createPunchCountString();
+createPunchPowerString()
+rajiniPunch();
+}
+
+function restartGame(){
+  document.getElementById("punchButton").disabled=false;
+  punchCount=5;
+  if (difficultyLevel==1){bagHealth=10}
+  if (difficultyLevel==2){bagHealth=15}
+  if (difficultyLevel==3){bagHealth=20}
+  document.getElementById("difficultyLevelDisplay").innerHTML = "Difficulty Level: " + difficultyLevel;
+  document.getElementById("bagHealthDisplay").innerHTML =  "Bag health: " + bagHealth;
+  document.getElementById("gameStatus").innerHTML =  "Game Status: Good Luck Punchy!!";
+  document.getElementById("punchPowerDisplay").innerHTML =  "";
+  document.getElementById("punchCountDisplay").innerHTML =  "Punch Count: " + punchCount + " punches remaining";
+  document.getElementById("mainImage").src= character+"/start.gif";
+  document.getElementById("punchPowerDisplay").innerHTML =  "Punch Power: ";
+  document.getElementById("superPunchButton").disabled=false;
+  document.getElementById("superOnePunchButton").disabled=false;
+  createHealthString();
+  createPunchCountString();
+  createPunchPowerString()
+}
+
+function displayPunchImage() {
+  if(punchPower ==1){
+    document.getElementById("mainImage").src=character+"/left2.gif";
+  }
+  if(punchPower ==2){
+    document.getElementById("mainImage").src=character+"/left.gif";
+  }
+  if(punchPower ==3){
+    document.getElementById("mainImage").src=character+"/right.gif";
+  }
+  if(punchPower ==4){
+    document.getElementById("mainImage").src=character+"/right.gif";
+  }
+  if(punchPower ==5){
+    document.getElementById("mainImage").src=character+"/left.gif";
+  }
+  if(punchPower >= punchPowerVariable && punchPower <= punchPowerVariable + 10 && bagHealth >0 ){
+    document.getElementById("mainImage").src=character+"/superPunch.gif";
+  }
+  if(punchPower > punchPowerVariable + 10 && bagHealth > 0){
+    document.getElementById("mainImage").src=character+"/superOnePunch.gif";
+  }
+}
+
+function youWin(){
+  document.getElementById("gameStatus").innerHTML =  "Game Status: !!You Win!!";
+  playYouWinAudio();
+
+  if (punchPower>punchPowerVariable && punchPower<=superPunchVariable){
+  document.getElementById("mainImage").src=character+"/superPunchWin.gif";
+  }
+  if (punchPower>superPunchVariable){
+  document.getElementById("mainImage").src=character+"/superOnePunchWin.gif";
+  }
+  if (punchPower<=punchPowerVariable){
+    document.getElementById("mainImage").src=character+"/punchWin.gif";
+  }
+  //document.getElementById("mainImage").src="superPunchWin.gif";
+  document.getElementById("punchButton").disabled=true;
+  document.getElementById("superPunchButton").disabled=true;
+  document.getElementById("superOnePunchButton").disabled=true;
+}
+function youLose(){
+  document.getElementById("gameStatus").innerHTML =  "Game Status: You Lose";
+  document.getElementById("mainImage").src=character+"/lose.gif";
+  playYouLoseAudio();
+  document.getElementById("punchButton").disabled=true;
+  document.getElementById("superPunchButton").disabled=true;
+  document.getElementById("superOnePunchButton").disabled=true;
+}
+
+function superPunchAction(){
+  document.getElementById("superOnePunchButton").disabled=true;
+  punchCount=punchCount-2;
+  punchPower = Math.floor(Math.random() * superPunchVariable) + 1
+  displayPunchImage();
+bagHealth=bagHealth-punchPower;
+
+punchResult();
+if (punchCount==1){
+  document.getElementById("superPunchButton").disabled=true;
+}
+createHealthString();
+createPunchCountString();
+createPunchPowerString()
+rajiniPunch();
+}
+function punchResult(){
+
+if (punchCount >=0 && bagHealth <=0){
+    bagHealth=0;
+    youWin();
+  }
+  else{
+    document.getElementById("gameStatus").innerHTML = "Keep Punching...You Can Do it!!!";
+  }
+if (punchCount<=0 && bagHealth>>0){
+  punchCount=0;
+  youLose();
+}
+document.getElementById("punchCountDisplay").innerHTML =  "Punch Count: " + punchCount + " punches remaining";
+document.getElementById("punchPowerDisplay").innerHTML =  "Punch Power: " + punchPower;
+document.getElementById("bagHealthDisplay").innerHTML =  "Bag Health: " + bagHealth;
+}
+
+function superOnePunchAction(){
+  punchCount=punchCount-punchCount;
+  punchPower = Math.floor(Math.random() * superOnePunchVariable) + 1
+  displayPunchImage();
+bagHealth=bagHealth-punchPower;  
+punchResult();
+document.getElementById("superPunchButton").disabled=true;
+document.getElementById("punchButton").disabled=true;
+document.getElementById("superOnePunchButton").disabled=true;
+createHealthString();
+createPunchCountString();
+createPunchPowerString();
+rajiniPunch();
+}
+function selectFeilong(){
+  character="feilong";
+  document.getElementById("mainImage").src="feilongstart.gif";
+  document.getElementById("selectFeilongImage").src="feilong.png";
+  document.getElementById("selectRyuImage").src="ryuGray.jpg";
+  document.getElementById("selectRajiniImage").src="rkGray.jpg";
+}
+function selectRyu(){
+  character="ryu";
+  document.getElementById("mainImage").src="ryustart.gif";
+  document.getElementById("selectRyuImage").src="ryu.jpg";
+  document.getElementById("selectFeilongImage").src="feilongGray.png";
+  document.getElementById("selectRajiniImage").src="rkGray.jpg";
+  }
+  function selectRajini(){
+  character="rajini";
+  document.getElementById("mainImage").src="rk_start.gif";
+  document.getElementById("selectRyuImage").src="ryuGray.jpg";
+  document.getElementById("selectFeilongImage").src="feilongGray.png";
+  document.getElementById("selectRajiniImage").src="rk.jpg";
+  echechche.play();
+}
+function playPunchSound(){
+  punchSoundInt = Math.floor(Math.random() * 6) + 1;
+  if (punchSoundInt==1){punch1_audio.play();}
+  if (punchSoundInt==2){punch2_audio.play();}
+  if (punchSoundInt==3){punch3_audio.play();}
+  if (punchSoundInt==4){punch4_audio.play();}
+  if (punchSoundInt==5){punch5_audio.play();}
+  if (punchSoundInt==6){punch6_audio.play();}
+
+}
+function playYouLoseAudio(){
+  youLoseAudio.play();
+}
+function playYouWinAudio(){
+youWinAudio.play();
+}
+function rajiniPunch(){
+  if (character=="rajini"){
+    rajinilaugh.play();
+    document.getElementById("mainImage").src="rkWin.gif";
+    document.getElementById("punchButton").disabled=true;
+    document.getElementById("superPunchButton").disabled=true;
+    document.getElementById("superOnePunchButton").disabled=true;
+    document.getElementById("punchCountDisplay").innerHTML =  "Punch Count: huh?";
+document.getElementById("punchPowerDisplay").innerHTML =  "Punch Power: Unknown";
+document.getElementById("bagHealthDisplay").innerHTML =  "Bag Health: Destroyed!";
+document.getElementById("gameStatus").innerHTML =  "Game Status: Woah!!  What was that???";
+
+  }
+}
+</script>
+
+<!-- Main Program -->
+
+<div class="settings">
+  <!--<img id=mainImage src="punchy man stance one.png" alt="puncy man first stance" width="100" height="100"> -->
+  <button id=setDifficulty onclick="setGameSetting()">Set Difficulty</button>
+  <button id=restart onclick="restartGame()">Restart Game</button>
+</div>
+
+<div class="action">
+  <ul>
+  <button id="punchButton" onclick="punchAction();playPunchSound()">Punch</button>
+  <button id="superPunchButton" onclick="superPunchAction();playPunchSound()">Super Punch</button>
+  <button id="superOnePunchButton" onclick="superOnePunchAction();playPunchSound()">Super One Punch</button>
+  <p id="punchPowerDisplay">Punch Power:</p>
+  <p id="bagHealthDisplay">Bag Health:</p>
+    <p id="punchCountDisplay">Punch Count:</p>
+  <img id=mainImage src="main.jpg" alt="main image" width="300" height="200">
+  <p id="difficultyLevelDisplay">Difficulty:</p>  
+  <p id="gameStatus">Game Status:</p>
+  </ul>
+</div>
+
+<div class="healthindicator">
+  <ul>
+    <p id="healthStringDisplay">Bag Health: </p>
+  </ul>
+</div>
+
+<div class="punchremainder">
+  <ul>
+    <p id="punchStringDisplay">Punches Remaing: </p>
+  </ul>
+</div>
+<div class="punchpower">
+  <ul>
+    <p id="punchPowerIndicator">Punch Power: </p>
+  </ul>
+</div>
+<div class="characters">
+  <ul>
+    <img id="selectRyuImage" onclick="selectRyu()" src="ryu.jpg" width="40" height="40" />
+    <img id="selectFeilongImage" onclick="selectFeilong()" src="feilongGray.png" width="40" height="40" />
+    <img id="selectRajiniImage" onclick="selectRajini()" src="rkGray.jpg" width="40" height="40" />
+  </ul>
+</div>
+</body>
+</html>
